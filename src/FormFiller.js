@@ -11,7 +11,16 @@ function FormFiller() {
 
     var _version = '0.1.12';
     var _context = this;
-    this.jsCode = 'javascript:/* FormFiller v' + _version + ' */var d=document;function p(a){return d.getElementById(a).querySelector(\':scope input\')}function i(a){return d.getElementById(a)}function n(a){return d.getElementsByName(a)[0]}function e(a){t=\'change\';if(window.navigator.userAgent.match(/Trident|MSIE\s/g)!=null){x=d.createEvent(\'Events\');x.initEvent(t,1,0);}else{x=new Event(t);}a.dispatchEvent(x);}function v(a,v){a.value=v;e(a)}function c(a){a.checked=true;e(a)}';
+
+    var _inputSelectors = [
+        'input:not(:hidden:radio,:checkbox,:submit,:file)',
+        'textarea',
+        'select', 
+        'input[type="radio"]:checked', 
+        'input[type="checkbox"]:checked'
+    ];
+
+    this.jsCode = 'javascript:/* FormFiller v' + _version + ' */var is=\':scope ' + _inputSelectors.join(',:scope ') + '\';var d=document;function p(a){return d.getElementById(a).querySelector(is)}function i(a){return d.getElementById(a)}function n(a){return d.getElementsByName(a)[0]}function e(a){t=\'change\';if(window.navigator.userAgent.match(/Trident|MSIE\s/g)!=null){x=d.createEvent(\'Events\');x.initEvent(t,1,0);}else{x=new Event(t);}a.dispatchEvent(x);}function v(a,v){a.value=v;e(a)}function c(a){a.checked=true;e(a)}';
     this.loadForm = function () {
         _loadJQuery();
     };
@@ -34,7 +43,7 @@ function FormFiller() {
     };
 
     this.save = function () {
-        jQuery('input:not(:hidden,:radio,:checkbox,:submit,:file), textarea, select, input[type="radio"]:checked, input[type="checkbox"]:checked').each(function () {
+        jQuery(_inputSelectors.join(',')).each(function () {
             if (_isVisible(this) && (_hasName(this) || _hasId(this) || _hasParentId(this))) {
                 if (_hasName(this) && _hasId(this) && _isRadioOrCheckbox(this)) {
                     formfiller.jsCode += 'c(i("' + _getId(this) + '"));';
