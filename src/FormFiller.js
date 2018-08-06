@@ -11,7 +11,7 @@ function FormFiller() {
 
     var _version = '0.1.12';
     var _context = this;
-    this.jsCode = 'javascript:/* FormFiller v' + _version + ' */var d=document;function i(a){return d.getElementById(a)}function n(a){return d.getElementsByName(a)[0]}function e(a){t=\'change\';if(window.navigator.userAgent.match(/Trident|MSIE\s/g)!=null){x=d.createEvent(\'Events\');x.initEvent(t,1,0);}else{x=new Event(t);}a.dispatchEvent(x);}function v(a,v){a.value=v;e(a)}function c(a){a.checked=true;e(a)}';
+    this.jsCode = 'javascript:/* FormFiller v' + _version + ' */var d=document;function p(a){return d.getElementById(a).querySelector(\':scope input\')}function i(a){return d.getElementById(a)}function n(a){return d.getElementsByName(a)[0]}function e(a){t=\'change\';if(window.navigator.userAgent.match(/Trident|MSIE\s/g)!=null){x=d.createEvent(\'Events\');x.initEvent(t,1,0);}else{x=new Event(t);}a.dispatchEvent(x);}function v(a,v){a.value=v;e(a)}function c(a){a.checked=true;e(a)}';
     this.loadForm = function () {
         _loadJQuery();
     };
@@ -40,8 +40,10 @@ function FormFiller() {
                     formfiller.jsCode += 'c(i("' + _getId(this) + '"));';
                 } else if (_hasId(this)) {
                     formfiller.jsCode += 'v(i("' + _getId(this) + '"),"' + _getValue(this) + '");'
-                } else {
+                } else if (_hasName(this)) {
                     formfiller.jsCode += 'v(n("' + _getName(this) + '"),"' + _getValue(this) + '");';
+                } else if (_hasParentId(this)) {
+                    formfiller.jsCode += 'v(p("' + _getParentId(this) + '"),"' + _getValue(this) + '");';
                 }
             }
         });
@@ -59,6 +61,15 @@ function FormFiller() {
 
     var _getName = function (element) {
         return jQuery(element).attr('name');
+    };
+
+    var _hasParentId = function (element) {
+        return (_getParentId(element) !== undefined);
+    };
+
+    var _getParentId = function (element) {
+        var parent = jQuery(element).closest('[id]')
+        return parent && parent.attr('id');
     };
 
     var _hasId = function (element) {
