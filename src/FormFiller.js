@@ -34,7 +34,7 @@ function FormFiller() {
     };
 
     this.save = function () {
-        jQuery('form input:not(:hidden,:radio,:checkbox,:submit,:file), form textarea, form select, form input[type="radio"]:checked, form input[type="checkbox"]:checked').each(function () {
+        jQuery('input:not(:hidden,:radio,:checkbox,:submit,:file), textarea, select, input[type="radio"]:checked, input[type="checkbox"]:checked').each(function () {
             if (_isVisible(this) && (_hasName(this) || _hasId(this))) {
                 if (_hasName(this) && _hasId(this) && _isRadioOrCheckbox(this)) {
                     formfiller.jsCode += 'c(i("' + _getId(this) + '"));';
